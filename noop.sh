@@ -33,6 +33,27 @@ IFS=$'\n\t'
 # Use Ctrl-c to exit the search view. I just leave it running in a terminal on
 # each computer, and share my notes via NextCloud.
 
+if ! command -v rg &> /dev/null
+then
+    echo "Please install ripgrep / rg to use noop"
+    echo "    https://github.com/BurntSushi/ripgrep"
+    exit 1
+fi
+
+if ! command -v fzf &> /dev/null
+then
+    echo "Please install fzf to use noop"
+    echo "    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install"
+    exit 1
+fi
+
+if ! command -v preview.sh &> /dev/null
+then
+    echo "Please install preview.sh to use noop"
+    echo "    curl -sL https://raw.githubusercontent.com/junegunn/fzf.vim/master/bin/preview.sh > ~/bin/preview.sh && chmod +x ~/bin/preview.sh"
+    exit 1
+fi
+
 # Where should this script look for the notes dir. Must exist.
 NOOP_NOTES_DIR="~/Notes"
 
