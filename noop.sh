@@ -66,8 +66,8 @@ mainloop () {
         set +e # fzf returns 1 for no match, and 130 for Ctrl-c and Escape, so turn off 'e' so we can check later.
         SEARCH_RESPONSE="$(rg --passthrough --line-number "" | fzf --preview="preview.sh {}" --preview-window=right:70%:wrap --expect=ctrl-c)"
         SEARCH_EXIT_CODE=$?
-        set -e
         rm CREATE_NEW_FILE
+        set -e
 
         # The --expect option to fzf has it returning two lines each time.
         # The first line is blank if it's one of the default completion keys
