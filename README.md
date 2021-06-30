@@ -4,14 +4,19 @@
 
 ## Inspired by https://github.com/alichtman/fzf-notes
 
-Needs to work on linux as well as on the ancient bash version on macOS.
+A loop around searching and editing text notes files.
 
-## DONE
-* Loop on search/edit til explicitly killed.
-* Search both filenames and contents.
-* Ability to create new files and subdirs.
-* Use $EDITOR for the actual file content editing.
-* Quitting $EDITOR gets you back in the search loop.
+Just run `noop` and start searching for the name or contents of the file you
+want to open or edit. Hit enter to edit any found file. Searching is done with
+`fzf` and `ripgrep`.
+
+Search for `ccc`, and hit enter to be prompted for a new filename, and edit it.
+
+Search for `nnn`, and hit enter to open a new timestamped file and edit it.
+
+When the editor is quit, then you're back to the search prompt.
+
+Loop between search and edit until a Ctrl-c.
 
 ## TODO
 * Tab-completion for subdirs when creating new notes.

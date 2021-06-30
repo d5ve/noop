@@ -19,16 +19,18 @@ IFS=$'\n\t'
 #
 ## USAGE
 #
-# Just run `noop` and start searching for the note file you want to edit. Hit
-# enter to select the note file and open $EDITOR with that file.
+# A loop around searching and editing text notes files.
 #
-# There is a `CREATE_NEW_FILE` dummy file in the search results, which then
-# prompts you for a new filename (which can include a new subdirectory name too),
-# and then opens the $EDITOR with the new file. If you don't specify a file
-# extension, then it defaults to `.md` for a markdown document.
+# Just run `noop` and start searching for the name or contents of the file you
+# want to open or edit. Hit enter to edit any found file. Searching is done
+# with `fzf` and `ripgrep`.
 #
-# Once you have made your changes to the notes file, then close $EDITOR to be put
-# back into the search view.
+# Search for `ccc`, and hit enter to be prompted for a new filename, and edit
+# it.
+#
+# Search for `nnn`, and hit enter to open a new timestamped file and edit it.
+#
+# When you close the editor you're back at the search prompt.
 #
 # Use Ctrl-c to exit the search view. I just leave it running in a terminal on
 # each computer, and share my notes via NextCloud.
@@ -61,12 +63,12 @@ NOOP_NOTES_DIR="~/Notes"
 NOOP_FILE_DEFAULT_EXTENSION="md"
 
 mainloop () {
+    echo ccc > CREATE_NEW_FILE
+    echo nnn > NEW_NOTE_NOW
     while true; do
-        echo "CREATE_NEW_FILE" > CREATE_NEW_FILE
         set +e # fzf returns 1 for no match, and 130 for Ctrl-c and Escape, so turn off 'e' so we can check later.
         SEARCH_RESPONSE="$(rg --passthrough --line-number "" | fzf --preview="preview.sh {}" --preview-window=right:70%:wrap --expect=ctrl-c)"
         SEARCH_EXIT_CODE=$?
-        rm CREATE_NEW_FILE
         set -e
 
         # The --expect option to fzf has it returning two lines each time.
@@ -105,6 +107,9 @@ mainloop () {
                     mkdir -p "$(dirname "$FILE_TO_EDIT")"
                     $EDITOR "$FILE_TO_EDIT"
                 fi
+            elif [ "$FILE_TO_EDIT" = "NEW_NOTE_NOW" ]; then
+                FILE_TO_EDIT="$(date +%Y%m%d-%H%M%S)_$(hostname).$NOOP_FILE_DEFAULT_EXTENSION"
+                    $EDITOR "$FILE_TO_EDIT"
             else
                 $EDITOR "$FILE_TO_EDIT" +$LINE_NUMBER
             fi
